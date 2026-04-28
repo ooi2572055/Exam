@@ -1,38 +1,3 @@
-//package tool;
-//
-//import java.io.IOException;
-//import java.io.PrintWriter;
-//import jakarta.servlet.ServletException;
-//import jakarta.servlet.http.*;
-//import jakarta.servlet.annotation.WebServlet;
-//
-//@WebServlet(urlPatterns={"*.action"})
-//public class FrontController extends HttpServlet {
-//
-//	public void doPost(
-//		HttpServletRequest request, HttpServletResponse response
-//	) throws ServletException, IOException {
-//		PrintWriter out=response.getWriter();
-//		try {
-//			String path=request.getServletPath().substring(1);
-//			String name=path.replace(".a", "A").replace('/', '.');
-//			Action action=(Action)Class.forName(name).
-//				getDeclaredConstructor().newInstance();
-//			String url=action.execute(request, response);
-//			request.getRequestDispatcher(url).
-//				forward(request, response);
-//		} catch (Exception e) {
-//			e.printStackTrace(out);
-//		}
-//	}
-//
-//	public void doGet(
-//		HttpServletRequest request, HttpServletResponse response
-//	) throws ServletException, IOException {
-//		doPost(request, response);
-//	}
-//}
-
 package tool;
 
 import java.io.IOException;
@@ -49,28 +14,30 @@ public class FrontController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		try {
-			// パスを取得
+			// 1. パスを取得 (例: scoremanager/main/SubjectList.action)
 			String path = req.getServletPath().substring(1);
-			// ファイル名を取得しクラス名に変換
+
+			// 2. クラス名に変換 (例: scoremanager.main.SubjectListAction)
+			// スラッシュをドットに、.action を Action という文字に置き換えています
 			String name = path.replace(".a", "A").replace('/', '.');
-			// アクションクラスのインスタンスを返却
+
+			// 3. 変換した名前（name）を使ってクラスを読み込み、インスタンス化
 			Action action = (Action) Class.forName(name).getDeclaredConstructor().newInstance();
 
-			// 遷移先URLを取得
+			// 4. アクションを実行
 			action.execute(req, res);
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			// エラーページへリダイレクト
-			req.getRequestDispatcher("/error.jsp").forward(req, res);
+			// もしエラーが出たら、ブラウザに直接エラー内容を表示するようにします（デバッグ用）
+			res.setContentType("text/plain; charset=UTF-8");
+			res.getWriter().println("FrontControllerでエラーが発生しました:");
+			e.printStackTrace(res.getWriter());
 		}
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-		doGet(req,res);
-
+		doGet(req, res);
 	}
 }
