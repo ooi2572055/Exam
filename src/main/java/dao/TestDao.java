@@ -76,8 +76,7 @@ public class TestDao extends Dao {
         PreparedStatement statement = null;
 
         try {
-            String sql = baseSql + " AND ent_year = ? AND class_num = ? AND subject_cd = ?";
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(" AND ent_year = ? AND class_num = ? AND subject_cd = ?");
             statement.setString(1, school.getSchoolCd());
             statement.setInt(2, entYear);
             statement.setString(3, classNum);
@@ -139,8 +138,7 @@ public class TestDao extends Dao {
 
         try {
             // 更新または挿入の処理（例として更新）
-            String sql = "UPDATE test SET point = ? WHERE student_id = ? AND subject_cd = ? AND no = ?";
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement( "UPDATE test SET point = ? WHERE student_id = ? AND subject_cd = ? AND no = ?");
             statement.setInt(1, test.getPoint());
             statement.setString(2, test.getStudent().getStudentNo());
             statement.setString(3, test.getSubject().getSubject_cd());

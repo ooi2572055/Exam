@@ -20,7 +20,7 @@ public class SubjectDAO {
         DataSource ds = (DataSource) envContext.lookup("jdbc/book");
         return ds.getConnection();
     }
-    
+    					
     // 全件取得する仕事（メソッド）
     public List<Subject> findAll() {
         List<Subject> list = new ArrayList<>();
