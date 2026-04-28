@@ -1,4 +1,3 @@
-//aa
 package dao;
 
 import java.sql.Connection;
@@ -11,53 +10,52 @@ import bean.Student;
 import bean.TestListStudent;
 
 public class TestListStudentDao extends Dao {
-	
-	private String baseSql =
-		    "SELECT s.student_no, sub.subject_cd, sub.subject_name, t.num, t.point " +
-		    "FROM student s " +
-		    "JOIN test t ON s.student_no = t.student_no " +
-		    "JOIN subject sub ON t.subject_cd = sub.subject_cd ";
-	
-	
-	public List<TestListStudent> filter(Student student) throws Exception {
+    
+    private String baseSql =
+        "SELECT s.student_no, sub.subject_cd, sub.subject_name, t.num, t.point " +
+        "FROM student s " +
+        "JOIN test t ON s.student_no = t.student_no " +
+        "JOIN subject sub ON t.subject_cd = sub.subject_cd ";
 
-	    List<TestListStudent> list = new ArrayList<>();
+    // ★戻り値の型を修正
+    public List<TestListStudent> filter(Student student) throws Exception {
 
-	    Connection con = getConnection();
+        List<TestListStudent> list = new ArrayList<>();
 
-	    String sql = baseSql + "WHERE s.student_no = ?";
+        Connection con = getConnection();
 
-	    PreparedStatement st = con.prepareStatement(sql);
-	    st.setString(1, student.getStudentNo());
+        String sql = baseSql + "WHERE s.student_no = ?";
 
-	    ResultSet rs = st.executeQuery();
+        PreparedStatement st = con.prepareStatement(sql);
+        st.setString(1, student.getStudentNo());
 
-	    list = postFilter(rs);
+        ResultSet rs = st.executeQuery();
 
-	    st.close();
-	    con.close();
+        list = postFilter(rs);
 
-	    return list;
-	}
-        
-	
-	private List<TestListStudent> postFilter(ResultSet rs) throws Exception {
+        rs.close();
+        st.close();
+        con.close();
 
-	    List<TestListStudent> list = new ArrayList<>();
+        return list;
+    }
 
-	    while (rs.next()) {
-	        TestListStudent bean = new TestListStudent();
+    // ★戻り値の型を修正
+    private List<TestListStudent> postFilter(ResultSet rs) throws Exception {
 
-	        bean.setSubjectCd(rs.getString("subject_cd"));
-	        bean.setSubjectName(rs.getString("subject_name"));
-	        bean.setNum(rs.getInt("num"));
-	        bean.setPoint(rs.getInt("point"));
+        List<TestListStudent> list = new ArrayList<>();
 
-	        list.add(bean);
-	    }
+        while (rs.next()) {
+            TestListStudent bean = new TestListStudent();
 
-	    return list;
-	}
-	
-	
+            bean.setSubjectCd(rs.getString("subject_cd"));
+            bean.setSubjectName(rs.getString("subject_name"));
+            bean.setNum(rs.getInt("num"));
+            bean.setPoint(rs.getInt("point"));
+
+            list.add(bean);
+        }
+
+        return list;
+    }
 }
