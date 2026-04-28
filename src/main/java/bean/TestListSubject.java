@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class TestListSubject {
 
-	/** 入学年度 */
+	/** 入学年度 */ 
 	private int entYear;
 
 	/** 学籍番号 */
